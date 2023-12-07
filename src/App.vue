@@ -2,6 +2,26 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue'
+import { useSSRContext } from 'vue'
+
+let componentName : string
+
+if (import.meta.env.SSR) {
+  const ctx = useSSRContext();
+
+  if (ctx?.url === "2") {
+    componentName = 'Test2' 
+  } else  {
+    componentName = 'Test1' 
+  }
+} else {
+  if (window.location.pathname === "/2") {
+    componentName = 'Test2' 
+  } else  {
+    componentName = 'Test1' 
+  }
+}
+
 </script>
 
 <template>
@@ -14,6 +34,7 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
+  <component :is="componentName" />
 </template>
 
 <style scoped>
@@ -22,9 +43,11 @@ import HelloWorld from './components/HelloWorld.vue'
   padding: 1.5em;
   will-change: filter;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }
